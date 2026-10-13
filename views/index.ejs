@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= name %> | Andhra home cooking</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="nav">
+    <a class="logo" href="#top"><%= name %></a>
+    <nav>
+      <a href="#menu">Menu</a>
+      <a href="#reserve">Reserve</a>
+      <button id="cartBtn" class="cart-btn">Order <span id="cartCount">0</span></button>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-text">
+        <h1>Rice, fire and a lot of chilli.</h1>
+        <p>Home cooking from the Godavari delta, served on banana leaf. Open daily, 11 am to 10 pm.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#menu">See the menu</a>
+          <a class="btn btn-ghost" href="#reserve">Book a table</a>
+        </div>
+      </div>
+      <div class="leaf" aria-hidden="true">
+        <div class="leaf-vein"></div>
+        <div class="plate">
+          <span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span>
+          <span class="rice"></span>
+        </div>
+      </div>
+    </section>
+
+    <section id="menu" class="section">
+      <h2>Today's menu</h2>
+      <div class="filters" role="tablist">
+        <% cats.forEach((c, i) => { %>
+          <button class="chip <%= i === 0 ? 'active' : '' %>" data-cat="<%= c %>"><%= c %></button>
+        <% }) %>
+      </div>
+      <div class="grid">
+        <% menu.forEach(m => { %>
+          <article class="dish" data-cat="<%= m.cat %>">
+            <div class="dish-icon"><%= m.icon %></div>
+            <div class="dish-body">
+              <h3><%= m.name %></h3>
+              <p><%= m.desc %></p>
+              <div class="dish-foot">
+                <span class="price">₹<%= m.price %></span>
+                <span class="heat" title="Spice level <%= m.hot %> of 3"><% for (let i = 0; i < 3; i++) { %><i class="<%= i < m.hot ? 'on' : '' %>"></i><% } %></span>
+                <button class="add" data-id="<%= m.id %>" aria-label="Add <%= m.name %>">Add</button>
+              </div>
+            </div>
+          </article>
+        <% }) %>
+      </div>
+    </section>
+
+    <section id="reserve" class="section reserve">
+      <div>
+        <h2>Reserve a table</h2>
+        <p>Tell us when you are coming. We hold your table for 15 minutes.</p>
+      </div>
+      <form id="reserveForm" novalidate>
+        <label>Name <input name="name" autocomplete="name" required></label>
+        <div class="row">
+          <label>Date <input type="date" name="date" required></label>
+          <label>Time <input type="time" name="time" required></label>
+        </div>
+        <label>Guests
+          <select name="guests"><% for (let i = 1; i <= 8; i++) { %><option value="<%= i %>" <%= i === 2 ? 'selected' : '' %>><%= i %></option><% } %></select>
+        </label>
+        <button class="btn btn-primary" type="submit">Reserve table</button>
+        <p id="reserveMsg" class="msg" role="status"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span><%= name %>, Eluru Road, Andhra Pradesh</span>
+    <span>Open daily, 11 am to 10 pm</span>
+  </footer>
+
+  <aside id="drawer" class="drawer" aria-hidden="true">
+    <div class="drawer-head"><h2>Your order</h2><button id="closeCart" aria-label="Close order">✕</button></div>
+    <ul id="cartList"></ul>
+    <p id="cartEmpty" class="empty">Nothing here yet. Add a dish from the menu.</p>
+    <div class="drawer-foot">
+      <div class="total"><span>Total</span><strong id="cartTotal">₹0</strong></div>
+      <button id="placeOrder" class="btn btn-primary">Place order</button>
+      <p id="orderMsg" class="msg" role="status"></p>
+    </div>
+  </aside>
+  <div id="scrim" class="scrim"></div>
+
+  <script>window.MENU = <%- JSON.stringify(menu) %>;</script>
+  <script src="/app.js"></script>
+</body>
+</html>
